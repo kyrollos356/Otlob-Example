@@ -1,0 +1,60 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.UserDAOImp;
+import com.poet.ordering.system.model.User;
+
+public class UserServiceImp implements UserService {
+	UserDAOImp userDAO = new UserDAOImp();
+	private final static int DUPLICATE_USERNAME_ERROR_CODE = 1062;
+	private static UserServiceImp instance;
+
+	public static UserServiceImp getInstance() {
+		if (instance == null) {
+			instance = new UserServiceImp();
+		}
+		return instance;
+	}
+
+	private UserServiceImp() {
+
+	}
+
+	public boolean addNewUser(User user) throws Exception {
+		int errorCode = userDAO.addNewUser(user);
+		if (errorCode == DUPLICATE_USERNAME_ERROR_CODE) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean editUserProfile(User user) throws Exception {
+		int errorCode = userDAO.editUserProfile(user);
+		if (errorCode == DUPLICATE_USERNAME_ERROR_CODE) {
+			return true;
+		}
+		return false;
+	}
+
+	public User findByEmailAndPassword(User user) throws Exception {
+		return userDAO.findByEmailAndPassword(user);
+	}
+	
+	public List<User> selectAllUsersExceptUserProfile(User user) {
+		return userDAO.selectAllUsersExceptUserProfile(user);
+	}
+
+	public void adminDeleteUserById(User user) {
+		userDAO.deleteUserById(user);
+	}
+	
+	public List<User> selectAllUsers(){
+		return userDAO.selectAllUsers();
+	}
+	
+	public void insertInSubscription(User user1, User user2) {
+		userDAO.insertInSubscription(user1, user2);
+	}
+
+}

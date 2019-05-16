@@ -1,0 +1,12 @@
+package com.poet.ordering.system.dao;
+
+import com.poet.ordering.system.model.Restaurant;
+
+public interface RestaurantDAO {
+	
+	public void insertRestaurant(Restaurant restaurant) throws Exception;
+	public void editRestaurant(Restaurant restaurant) throws Exception;
+	public void deleteRestaurant(int id) throws Exception;
+	public Restaurant getRestaurant(int id) throws Exception;
+
+}

@@ -1,0 +1,25 @@
+function click_handler() {
+debugger;
+	var fullname = document.forms["NewUser"]["fullname"].value;
+	var email = document.forms["NewUser"]["email"].value;
+
+	var skype = document.forms["NewUser"]["skypeID"].value;
+
+	if (fullname == "") {
+		alert("Please input fullname");
+		return false;
+	}
+
+	if (email == "") {
+		alert("Please input email");
+		return false;
+	}
+
+	if (skype == "") {
+		alert("Please input Skype ID");
+		return false;
+	}
+
+
+	return true;
+}

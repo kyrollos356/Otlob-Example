@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="signup.css" />
+<link rel="stylesheet" type="text/css" href="home.css" />
+</head>
+
+<body>
+	
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href=Home><img src="poet.png" alt="Logo"
+				height="35"></a>
+		</div>
+		<ul class="nav navbar-nav navbar-left">
+			<li class="dropdown"><a class="dropdown-toggle"
+				data-toggle="dropdown" href="#">Orders <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#">Create Order</a></li>
+					<li><a href=AllOrderRequests>View Orders in Progress</a></li>
+				</ul></li>
+
+			<form action="CreateOrderRequestServlet" method="post"
+				onsubmit="required()">
+				<br> <br>
+				<h4>restaurant name : ${restaurantname}</h4>
+				<label>Order Info:<br>Order time :
+				</label><input type="datetime-local" id="date" name="date"
+					value="2018-06-12T19:30" min="2018-06-14T00:00" />
+				<div>
+					<textarea rows="10" cols="30" name="itemsordered"
+						placeholder="enter items you want to order here"></textarea>
+					<br>
+					<button class="signbtn badge-pill badge-success" type="Submit"
+						value="Submit">Create order</button>
+			</form>
+			<script> function editContet()
+			{
+				var editable = document.getElementById("your-Id-Here").contenteditable="true";
+			}
+			</script>
+</body>
+</html>

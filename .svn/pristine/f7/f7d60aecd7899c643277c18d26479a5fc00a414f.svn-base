@@ -1,0 +1,28 @@
+package com.poet.ordering.system.service;
+
+import com.poet.ordering.system.dao.PhoneDAOImp;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+
+public class PhoneServiceImp {
+	
+	PhoneDAOImp phoneDAO = new PhoneDAOImp();
+	private static PhoneServiceImp instance;
+	
+	public static PhoneServiceImp getInstance() {
+		if (instance == null) {
+			instance = new PhoneServiceImp();
+		}
+		return instance;
+	}
+	
+	private PhoneServiceImp() {
+
+	}
+	
+	public boolean addNewPhone(Phone phone, Restaurant restaurant) throws Exception {
+		phoneDAO.insertPhone(phone, restaurant);
+		return false;
+	}
+
+}

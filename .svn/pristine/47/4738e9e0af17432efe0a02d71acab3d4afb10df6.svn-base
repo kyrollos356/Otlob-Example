@@ -1,0 +1,53 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+
+public class TagDAOImp implements TagDAO{
+	
+	public void insertTag(Tag tag, Restaurant restaurant) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String getId = "SELECT Restaurant_id from restaurant where Name='" + restaurant.getName() + "'";
+		String insertTag = "";
+				
+		Connection conn = connectionManager.getConnection();
+		PreparedStatement preparedStatement;
+		Statement stmt = null;
+		stmt = conn.createStatement();
+		try {
+			ResultSet rs = stmt.executeQuery(getId);
+			while(rs.next()){
+		         int id  = rs.getInt("Restaurant_id");
+		         insertTag = "INSERT INTO tag (`Tag_name`, `Restaurant_id`) VALUES ('"+ tag.getTag() + "', '" + id + "');";
+		      }
+			preparedStatement = connection.prepareStatement(insertTag);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void editTag(Tag tag) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteTag(Tag tag) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

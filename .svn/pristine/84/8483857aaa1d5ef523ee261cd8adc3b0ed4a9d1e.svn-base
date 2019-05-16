@@ -1,0 +1,22 @@
+ .animated {
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
+
+.stars
+{
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #93b32d;
+}
+
+.cancelbtn{
+	color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+	width: 61.72px;
+	height: 36px;
+	text-align: center;
+    vertical-align: middle;
+}

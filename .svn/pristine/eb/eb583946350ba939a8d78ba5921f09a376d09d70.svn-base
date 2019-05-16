@@ -1,0 +1,22 @@
+package com.poet.ordering.system.service;
+
+import com.poet.ordering.system.model.User;
+import java.util.List;
+
+public interface UserService {
+
+	public boolean addNewUser(User user) throws Exception;
+
+	public void adminDeleteUserById(User user);
+
+	public List<User> selectAllUsers();
+
+	public User findByEmailAndPassword(User user) throws Exception;
+
+	public List<User> selectAllUsersExceptUserProfile(User user);
+
+	public boolean editUserProfile(User user) throws Exception;
+	
+	public void insertInSubscription(User user1, User user2);
+
+}

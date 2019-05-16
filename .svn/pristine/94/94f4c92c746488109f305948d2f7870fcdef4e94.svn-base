@@ -1,0 +1,30 @@
+package com.poet.ordering.system.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.poet.ordering.system.dao.RestaurantDAOImp;
+import com.poet.ordering.system.dao.RestaurantReviewDAOImp;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.RestaurantReview;
+
+public class RestaurantReviewServiceImp implements RestaurantReviewService {
+	
+	RestaurantReviewDAOImp restaurantReviewDAOImp = new RestaurantReviewDAOImp();
+	private static RestaurantReviewServiceImp instance;
+
+	public static RestaurantReviewServiceImp getInstance() {
+		if (instance == null) {
+			instance = new RestaurantReviewServiceImp();
+		}
+		return instance;
+	}
+
+	public void addNewRestaurantReview(RestaurantReview RestaurantReview) throws Exception {
+		restaurantReviewDAOImp.InsertRestaurantReview(RestaurantReview);
+	}
+
+	public ArrayList<RestaurantReview> viewAllRestaurantReviews(int restaurantID)throws Exception{
+		return restaurantReviewDAOImp.selectAllRestaurantReviews(restaurantID);
+	}
+}

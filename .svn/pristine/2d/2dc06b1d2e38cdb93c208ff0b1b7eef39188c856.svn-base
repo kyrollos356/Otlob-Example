@@ -1,0 +1,104 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.model.OrderRequest;
+
+public class OrderRequestDAOImp implements OrderRequestDAO {
+
+	public List<OrderRequest> selectAllOpenOrderRequestsSortedByExpiryDate() {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<OrderRequest> allOrderRequests = new ArrayList<OrderRequest>();
+
+		query = "select * from order_request where Status = 'open'" + "ORDER BY Timeout ASC";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				OrderRequest eachOrderRequestInList = new OrderRequest();
+				eachOrderRequestInList = populateOrderRequest(eachOrderRequestInList, rs);
+				eachOrderRequestInList = selectRequestOwner(eachOrderRequestInList, conn);
+				eachOrderRequestInList = selectRestaurantName(eachOrderRequestInList, conn);
+
+				allOrderRequests.add(eachOrderRequestInList);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("Log In failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return allOrderRequests;
+	}
+
+	public OrderRequest selectRequestOwner(OrderRequest eachOrderRequestInList, Connection conn) {
+
+		ResultSet resultset = null;
+		String query = "";
+		Statement stmt = null;
+
+		try {
+
+			query = "select Full_name from user " + "WHERE User_id =" + eachOrderRequestInList.getUserId();
+
+			stmt = conn.createStatement();
+			resultset = stmt.executeQuery(query);
+
+			resultset.next();
+			eachOrderRequestInList.setOwnerName(resultset.getString("Full_name"));
+
+		} catch (Exception ex) {
+			System.out.println("Log In failed: An Exception has occurred! " + ex);
+		}
+		return eachOrderRequestInList;
+	}
+
+	public OrderRequest selectRestaurantName(OrderRequest eachOrderRequestInList, Connection conn) {
+
+		ResultSet result = null;
+		String query = "";
+		Statement stmt = null;
+
+		try {
+
+			query = "select Name from restaurant " + "WHERE Restaurant_id =" + eachOrderRequestInList.getRestaurantId();
+
+			stmt = conn.createStatement();
+			result = stmt.executeQuery(query);
+
+			result.next();
+			eachOrderRequestInList.setRestaurantName(result.getString("Name"));
+
+		} catch (Exception ex) {
+			System.out.println("Log In failed: An Exception has occurred! " + ex);
+		}
+		return eachOrderRequestInList;
+	}
+
+	private OrderRequest populateOrderRequest(OrderRequest orderRequest, ResultSet rs) throws SQLException {
+		orderRequest.setId(rs.getInt("Order_request_id"));
+		orderRequest.setTimeout(rs.getString("Timeout"));
+		orderRequest.setStatus(rs.getString("Status"));
+		orderRequest.setUserId(rs.getInt("User_id"));
+		orderRequest.setRestaurantId(rs.getInt("Restaurant_id"));
+		return orderRequest;
+	}
+
+}

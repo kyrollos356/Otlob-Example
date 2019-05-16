@@ -1,0 +1,7 @@
+function ChangeBtnName() {
+	var elem = document.getElementById("SubscribeButton");
+	if (elem.value == "Subscribe")
+		elem.value = "Unsubscribe";
+	else
+		elem.value = "Subscribe";
+}

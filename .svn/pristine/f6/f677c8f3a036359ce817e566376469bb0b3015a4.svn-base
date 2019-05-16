@@ -1,0 +1,11 @@
+
+
+a{
+	color: #93b32d;
+	font-size: 18px;
+	font-family:'Quicksand';
+	font-weight: bold;
+}
+body {
+	background-color: #f7f6f6;
+}

@@ -1,0 +1,91 @@
+package com.poet.ordering.system.dao.imp.restaurant;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.dao.restaurant.PhoneDAO;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+
+public class PhoneDAOImp implements PhoneDAO{
+
+	public void insertPhone(Phone phone, Restaurant restaurant) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String getId = "SELECT Restaurant_id from restaurant where Name='" + restaurant.getName() + "'";
+		String insertPhone = "";
+		Connection conn = connectionManager.getConnection();
+		PreparedStatement preparedStatement;
+		Statement stmt = null;
+		stmt = conn.createStatement();
+		try {
+			ResultSet rs = stmt.executeQuery(getId);
+			while(rs.next()){
+		         int id  = rs.getInt("Restaurant_id");
+		         insertPhone = "INSERT INTO phone (`Phone_number`, `Restaurant_id`) VALUES ('"+ phone.getPhoneNumber() + "', '" + id + "');";
+		      }
+			preparedStatement = connection.prepareStatement(insertPhone);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void editPhone(Phone phone) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String editPhone = "UPDATE phone SET Phone_number='"+ phone.getPhoneNumber() + "' WHERE Restaurant_id =" + phone.getRestaurantId() + ";";
+		
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement(editPhone);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	public void deletePhone(int id) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String deletePhone = "DELETE FROM phone WHERE Restaurant_id = " + id;
+		
+		PreparedStatement preparedStatement;
+		preparedStatement = connection.prepareStatement(deletePhone);
+		preparedStatement.executeUpdate();
+	}
+
+	@Override
+	public Phone getPhone(int id) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Phone phone = new Phone();
+		String viewPhone = "SELECT * from phone where Restaurant_id = " + id;
+		
+		Connection conn = connectionManager.getConnection();
+		Statement stmt = null;
+		stmt = conn.createStatement();
+		
+		ResultSet rs = stmt.executeQuery(viewPhone);
+		
+		while(rs.next()){
+	         String phoneNumber = rs.getString("Phone_number");
+	         
+	         phone.setRestaurantId(id);
+	         phone.setPhoneNumber(phoneNumber);
+	     }
+		return phone;
+	}
+
+}

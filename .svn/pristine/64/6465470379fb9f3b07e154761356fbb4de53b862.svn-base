@@ -1,0 +1,53 @@
+package com.poet.ordering.system.servlets.orders;
+
+import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import com.poet.ordering.system.model.Order;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.tribes.group.interceptors.OrderInterceptor;
+
+import com.poet.ordering.system.service.OrderService;
+import com.poet.ordering.system.model.OrderRequest;
+
+@WebServlet("/CreateOrderServlet")
+public class CreateOrderRequestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public CreateOrderRequestServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		request.getRequestDispatcher("createOrder.jsp").forward(request, response);
+
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		OrderRequest userOrder = new OrderRequest();
+		userOrder.setTimeout("timeout");
+		userOrder.setRestaurantId(5);
+		userOrder.setUserId(5);
+		userOrder.setStatus("open");
+
+		OrderService insertOrderInfo = new OrderService();
+		try {
+			insertOrderInfo.enterUserOrder(userOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		request.getRequestDispatcher("home.jsp").forward(request, response);
+
+	}
+}

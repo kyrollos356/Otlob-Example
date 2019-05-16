@@ -1,0 +1,28 @@
+package com.poet.ordering.system.service;
+
+import com.poet.ordering.system.dao.AddressDAOImp;
+import com.poet.ordering.system.model.Address;
+import com.poet.ordering.system.model.Restaurant;
+
+public class AddressServiceImp {
+	
+	AddressDAOImp addressDAO = new AddressDAOImp();
+	private static AddressServiceImp instance;
+	
+	public static AddressServiceImp getInstance() {
+		if (instance == null) {
+			instance = new AddressServiceImp();
+		}
+		return instance;
+	}
+	
+	private AddressServiceImp() {
+
+	}
+	
+	public boolean addNewAddress(Address address, Restaurant restaurant) throws Exception {
+		addressDAO.insertAddress(address, restaurant);
+		return false;
+	}
+
+}

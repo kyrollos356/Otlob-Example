@@ -1,0 +1,37 @@
+package com.poet.ordering.system.servlets.orders;
+
+import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;  
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.poet.ordering.system.service.OrderService;
+
+@WebServlet("/createOrder")
+public class CreateOrderServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public CreateOrderServlet() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		OrderService createOrder = new OrderService();
+		String sendUserOrder =  request.getParameter("userOrder");
+		
+		Date dateOfOrder = new Date();
+		
+		request.setAttribute("sendUserOrder", sendUserOrder);
+		request.getRequestDispatcher("createOrder.jsp").forward(request, response);
+		 
+		
+	}
+
+}

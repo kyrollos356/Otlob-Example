@@ -1,0 +1,100 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="basic.css" />
+<link rel="stylesheet" type="text/css" href="profile.css" />
+
+<t:header />
+<title>Restaurant Profile</title>
+</head>
+<body>
+	
+	<div class="container">
+		<div class="row">
+			<div class="title">
+				<i class="name">${restaurant.name}</i>
+			</div>
+		</div>
+		<br>
+		<br>
+		<div class="row">
+			<div class="col-sm-3 col-sm-offset-1">
+				<img class="profile-img" src="restaurantplaceholder.gif">
+			</div>
+
+			<div class="col-sm-6 ">
+			
+				<div class="skypeemail">
+					<c:choose>
+							<c:when test="${not empty restaurant.menuUrl}">
+								
+									<p>Menu URL: ${restaurant.menuUrl}</p>
+								
+							</c:when>
+
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${not empty restaurant.menuImage}">
+								
+									<p>Menu URL: ${restaurant.menuImage} </p>
+								
+							</c:when>
+
+						</c:choose>
+
+						
+								<p>Addresses: ${addresses}</p>
+						
+						
+							<p>Tags: ${tags}</p>
+						
+						
+							<p>Phone Numbers: ${phoneNumbers}</p>
+						
+					
+				</div>
+			</div>
+		</div>
+		<br><br><br>
+		<div class="title">
+				Reviews:
+			</div>
+		<div class="row">
+		<div class="well" style="display: inline-block;">
+				<div class="media">
+					<a class="pull-left" href="#"> <img class="media-object"
+						src="http://placekitten.com/150/150">
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading">userName</h4>
+						<p>content</p>
+						<ul class="list-inline list-unstyled">
+							<li><span><i class="glyphicon glyphicon-calendar"></i>
+									2 days, 8 hours </span></li>
+							<li>|</li>
+							<li><span class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star-empty"></span></li>
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+	</div>
+	
+
+</body>
+</html>

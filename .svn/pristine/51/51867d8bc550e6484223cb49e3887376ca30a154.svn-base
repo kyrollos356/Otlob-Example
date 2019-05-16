@@ -1,0 +1,12 @@
+package com.poet.ordering.system.dao;
+
+import java.util.List;
+
+import com.poet.ordering.system.model.Order;
+
+public interface OrderDAO {
+
+	public void addOrder(Order order) throws Exception;
+	public void editOrder(Order order) throws Exception;
+	public List viewAllOrders(int orderRequestId) throws Exception;
+}

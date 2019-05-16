@@ -1,0 +1,16 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.util.List;
+
+import com.poet.ordering.system.model.OrderRequest;
+
+public interface OrderRequestDAO {
+
+	public List<OrderRequest> selectAllOpenOrderRequestsSortedByExpiryDate();
+
+	public OrderRequest selectRequestOwner(OrderRequest eachOrderRequestInList, Connection conn);
+
+	public OrderRequest selectRestaurantName(OrderRequest eachOrderRequestInList, Connection conn);
+
+}

@@ -1,0 +1,184 @@
+package com.poet.ordering.system.servlets.orders;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.Address;
+import com.poet.ordering.system.model.Order;
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+import com.poet.ordering.system.model.User;
+import com.poet.ordering.system.service.AddressServiceImp;
+import com.poet.ordering.system.service.OrderRequestServiceImp;
+import com.poet.ordering.system.service.OrderServiceImp;
+import com.poet.ordering.system.service.PhoneServiceImp;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.TagServiceImp;
+
+/**
+ * Servlet implementation class OrderRequestServlet
+ */
+@WebServlet("/OrderRequest")
+@MultipartConfig
+public class OrderRequestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private OrderRequestServiceImp orderRequestServiceImp = OrderRequestServiceImp.getInstance();
+	private OrderServiceImp orderService = OrderServiceImp.getInstance();
+
+	public OrderRequestServlet() {
+		super();
+	}
+
+	public HttpServletRequest fetchDataToDisplayIt(HttpServletRequest request, int restaurantId) {
+		Restaurant restaurant = new Restaurant();
+		RestaurantServiceImp restaurantServiceImp = RestaurantServiceImp.getInstance();
+
+		Address address = new Address();
+		AddressServiceImp addressServiceImp = AddressServiceImp.getInstance();
+
+		Tag tag = new Tag();
+		TagServiceImp tagServiceImp = TagServiceImp.getInstance();
+
+		Phone phone = new Phone();
+		PhoneServiceImp phoneServiceImp = PhoneServiceImp.getInstance();
+
+		try {
+			restaurant = restaurantServiceImp.viewRestaurant(restaurantId);
+			phone = phoneServiceImp.viewPhone(restaurantId);
+			tag = tagServiceImp.viewTag(restaurantId);
+			address = addressServiceImp.viewAddress(restaurantId);
+
+			request.setAttribute("restaurant", restaurant);
+			request.setAttribute("phoneNumbers", phone.getPhoneNumber());
+			request.setAttribute("tags", tag.getTag());
+			request.setAttribute("addresses", address.getAddress());
+		} catch (Exception ex) {
+			System.out.println("selectRestaurant failed: An Exception has occurred! " + ex);
+		}
+		return request;
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int id = 0;
+		if (request.getParameter("id") != null) {
+			id = Integer.parseInt(request.getParameter("id"));
+		} else {
+			id = Integer.parseInt(request.getParameter("orderRequestId"));
+		}
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setId(id);
+		orderRequest = orderRequestServiceImp.selectRestaurantId(orderRequest);
+		request = fetchDataToDisplayIt(request, orderRequest.getRestaurantId());
+		try {
+			orderRequest = orderRequestServiceImp.getOrderRequest(id);
+			request.setAttribute("orderRequest", orderRequest);
+			String closeRequestButton = "";
+			if (orderRequest.getStatus().equals("Open")) {
+				closeRequestButton = "Close Request";
+			} else if (orderRequest.getStatus().equalsIgnoreCase("Closed")) {
+				closeRequestButton = "Archive Request";
+			} else {
+				closeRequestButton = "";
+			}
+			request.setAttribute("closeRequestButton", closeRequestButton);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		List<Order> listOrders = new ArrayList<Order>();
+		try {
+			listOrders = orderService.viewAllOrders(id);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		request.setAttribute("listOrders", listOrders);
+
+		Order order = new Order();
+		// TODO user id logged in
+		User user = new User();
+		user = (User) request.getSession().getAttribute("user");
+		order.setOrderRequestId(id);
+		order.setUserId(user.getId());
+		if (orderService.isUserExistsInOrders(order))
+			request.setAttribute("userOrderSubmitted", true);
+		else
+			request.setAttribute("userOrderSubmitted", false);
+
+		request.getRequestDispatcher("orderRequest.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String addOrder = request.getParameter("SubmitOrder");
+		String cancelOrderRequest = request.getParameter("Cancel");
+		String EditOrder = request.getParameter("EditOrder");
+		Order order = new Order();
+		User user = new User();
+		user = (User) request.getSession().getAttribute("user");
+		System.out.println(user.getId());
+		order.setUserId(user.getId());
+		request.setAttribute("loggedInUser", order);
+		if (addOrder != null || cancelOrderRequest != null || EditOrder != null) {
+			int id = Integer.parseInt(request.getParameter("orderRequestId"));
+			order.setOrderRequestId(id);
+			if (addOrder != null)
+				if (addOrder.equals("AddOrder")) {
+					if (request.getParameter("OrderContent") != "" || request.getParameter("OrderContent") != null) {
+						order.setContent(request.getParameter("OrderContent"));
+						orderService.submitOrder(order);
+					}
+				}
+			if (cancelOrderRequest != null)
+				if (cancelOrderRequest.equals("CancelOrderRequest")) {
+					OrderRequest userOrderRequest = new OrderRequest();
+					userOrderRequest.setId(id);
+					try {
+						orderRequestServiceImp.cancelOrderRequest(userOrderRequest);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			if (EditOrder != null)
+				if (EditOrder.equals("EditOrder")) {
+					order.setContent(request.getParameter("EditContent"));
+					orderService.editOrder(order);
+				}
+		} else {
+			int id = Integer.parseInt(request.getParameter("id"));
+			if (request.getParameter("content") != null) {
+				if (!request.getParameter("content").isEmpty()) {
+					addOrder(request, response, id);
+				}
+			}
+		}
+		doGet(request, response);
+	}
+
+	private void addOrder(HttpServletRequest request, HttpServletResponse response, int orderRequestId)
+			throws ServletException, IOException {
+		Order order = new Order();
+		if (request.getParameter("content") != "" || request.getParameter("content") != null) {
+			order.setContent(request.getParameter("content"));
+			User user = new User();
+			user = (User) request.getSession().getAttribute("user");
+			order.setUserId(user.getId());
+			order.setOrderRequestId(orderRequestId);
+			try {
+				orderService.submitOrder(order);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+}

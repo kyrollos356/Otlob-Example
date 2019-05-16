@@ -1,0 +1,294 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.model.User;
+
+public class UserDAOImp implements UserDAO {
+
+	public int addNewUser(User user) throws Exception {
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		String insertUserStatement = "INSERT INTO `orderiingsystem`.`user` (`Full_name`, `Skype_id`, `Email`, `Password`, `Picture`) VALUES ('"
+				+ user.getFullname() + "', '" + user.getSkypeID() + "', '" + user.getEmail() + "', '"
+				+ user.getPassword() + "', '" + user.getPicture() + "');";
+
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement(insertUserStatement);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			return e.getErrorCode();
+		}
+		return 0;
+	}
+
+	public int editUserProfile(User user) throws Exception {
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		String updateUserStatement = "UPDATE `orderiingsystem`.`user` SET `Full_name`='" + user.getFullname()
+				+ "', `Skype_id`='" + user.getSkypeID() + "', `Email`='" + user.getEmail() + "', `Password`='"
+				+ user.getPassword() + "', `Picture`='" + user.getPicture() + "' WHERE `User_id`='" + user.getId()
+				+ "';";
+
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement(updateUserStatement);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			return e.getErrorCode();
+		}
+		return 0;
+	}
+
+	public User findByEmailAndPassword(User user) throws Exception {
+
+		String selectUserStatement = "SELECT " + "User_id, Full_name, Skype_id, Email, Password, Picture" + " "
+				+ "FROM user " + "WHERE Email='" + user.getEmail() + "' AND Password='" + user.getPassword() + "';";
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(selectUserStatement);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (!rs.next()) {
+				connection.close();
+				return null;
+			}
+			user = populateUserFields(user, rs);
+			connection.close();
+			return user;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private User populateUserFields(User user, ResultSet rs) throws SQLException {
+		user.setFullname(rs.getString("Full_name"));
+		user.setSkypeID(rs.getString("Skype_id"));
+		user.setPicture(rs.getString("Picture"));
+		user.setId(rs.getInt("User_id"));
+		user.setEmail(user.getEmail());
+		user.setPassword(user.getPassword());
+		return user;
+	}
+
+	public void deleteUserById(User user) {
+
+		Connection conn = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		query = "DELETE FROM user WHERE User_id = '" + user.getId() + "';";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+
+		} catch (Exception ex) {
+			System.out.println("Deletion failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, null, conn);
+	}
+
+	public void insertInSubscription(User user1, User user2) {
+
+		Connection conn = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		query = "INSERT INTO `subscribtion` (`User_id1`, `User_id2`) VALUES ('" + user1.getId() + "', '" + user2.getId()
+				+ "');";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+
+		} catch (Exception ex) {
+			System.out.println("insert In Subscription failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, null, conn);
+	}
+
+	public void deleteFromSubscription(User user1, User user2) {
+
+		Connection conn = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		query = "DELETE FROM subscribtion WHERE User_id1 = '" + user1.getId() + "' and User_id2 = '" + user2.getId()
+				+ "';";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+
+		} catch (Exception ex) {
+			System.out.println("delete From Subscription failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, null, conn);
+	}
+
+	public List<User> selectSubscribersByUserId(User user) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> allSubscribers = new ArrayList<User>();
+
+		query = "select * from user where User_id in (select User_id2 from subscribtion WHERE User_id1 = "
+				+ user.getId() + ")";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				User eachSubscriber = new User();
+				eachSubscriber = populateUserFields(eachSubscriber, rs);
+				allSubscribers.add(eachSubscriber);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("select Subscribers failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return allSubscribers;
+	}
+
+	public List<User> selectUnsubscribersByUserId(User user) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> allUnsubscribers = new ArrayList<User>();
+
+		query = "select * from user WHERE ( (User_id) NOT IN ( select User_id2 from subscribtion where User_id1 = "
+				+ user.getId() + ")) and (User_id != " + user.getId() + ")";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				User eachUnsubscriber = new User();
+				eachUnsubscriber = populateUserFields(eachUnsubscriber, rs);
+				allUnsubscribers.add(eachUnsubscriber);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("select Unsubscribers failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return allUnsubscribers;
+	}
+
+	public List<User> selectUserInSearchWhereSubscribed(String search, User user) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> subscriberSearchList = new ArrayList<User>();
+
+		query = "SELECT * from user WHERE Full_name LIKE '%" + search + "%'"
+				+ "and User_id in (select User_id2 from subscribtion WHERE User_id1 = " + +user.getId() + ")";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				User eachUser = new User();
+				eachUser = populateUserFields(eachUser, rs);
+				subscriberSearchList.add(eachUser);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("select subscribers failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return subscriberSearchList;
+	}
+
+	public List<User> selectUserInSearchWhereNotSubscribed(String search, User user) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> nonSubscriberSearchList = new ArrayList<User>();
+
+		query = "SELECT * from user WHERE Full_name LIKE '%" + search + "%'"
+				+ "and ( (User_id) NOT IN ( select User_id2 from subscribtion where User_id1 = " + user.getId()
+				+ ")) and (User_id != " + user.getId() + ")";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				User eachUser = new User();
+				eachUser = populateUserFields(eachUser, rs);
+				nonSubscriberSearchList.add(eachUser);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("select Unsubscribers failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return nonSubscriberSearchList;
+	}
+}

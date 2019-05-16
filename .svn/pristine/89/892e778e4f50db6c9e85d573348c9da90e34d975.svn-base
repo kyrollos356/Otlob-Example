@@ -1,0 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="deleteRestaurant.css" />
+<title>Delete Restaurant</title>
+</head>
+<body>
+	<br>
+	<br>
+	<div class="midcontainer">
+		<div class="midwell">
+			<p class="ptitle">Are You Sure You Want To Delete ${restaurantName} ?</p>
+			<div class="middle">
+				<form action="deleteRestaurant" name="deleteRestaurant" method="POST" enctype="multipart/form-data">
+					<input placeholder="Restaurant Id" type="hidden" id="restaurantId" name="restaurantId" value="${restaurantId}">
+					<button type="submit" value="submit" class="delete-restaurant-btn badge-pill badge-success">Delete</button>
+				</form>
+				<br>
+				<form action="/Orderingsystem/RestaurantServlet">
+				    <input type="submit" value="Cancel" class="cancel-restaurant-btn badge-pill badge-success"/>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

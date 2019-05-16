@@ -1,0 +1,61 @@
+package com.poet.ordering.system.service;
+
+import com.poet.ordering.system.model.Order;
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.model.User;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.poet.ordering.system.dao.OrderDAOImp;
+import com.poet.ordering.system.dao.OrderRequestDAOImp;
+
+public class OrderServiceImp implements OrderService {
+	
+	OrderDAOImp orderDAO = new OrderDAOImp();
+	private static OrderServiceImp instance;
+
+	public static OrderServiceImp getInstance() {
+		if (instance == null) {
+			instance = new OrderServiceImp();
+		}
+		return instance;
+	}
+
+	public void submitOrder(Order order) {
+		orderDAO.insertOrder(order);
+	}
+
+	public void editOrder(Order order) {
+		orderDAO.updateOrder(order);
+	}
+
+	public List<Order> viewAllOrders(int orderRequestId) throws Exception {
+		return orderDAO.viewAllOrders(orderRequestId);
+	}
+
+	@Override
+	public void insertTimeout(Date timoutdate, int userId) throws Exception {
+	}
+	
+	public boolean isUserExistsInOrders(Order order) {
+		return  orderDAO.selectFromOrdersByUserIdToCheckExistence(order);
+	}
+
+	@Override
+	public void insertUserOrder(OrderRequest userOrderInfo) throws Exception {
+		OrderRequestDAOImp insertIntoDatabase = new OrderRequestDAOImp();
+		insertIntoDatabase.insertOrderInfo(userOrderInfo);
+	}
+
+	@Override
+	public void sendEamilToSubscribers(int userId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+
+
+}

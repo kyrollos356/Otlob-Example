@@ -1,0 +1,59 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="newRestaurant.css" />
+
+<title>New Restaurant</title>
+</head>
+
+<body>
+	<br>
+	<br>
+	<div class="midcontainer">
+		<div class="midwell">
+			<p class="ptitle">New Restaurant</p>
+			<div class="middle">
+				<form action="RestaurantServlet" name="newRestaurant"
+					onSubmit="return click_handler()" method="POST"
+					enctype="multipart/form-data">
+					<br><input placeholder="Restaurant name" type="text" id="restaurantname" name="restaurantname" value="${restaurantname}">
+					<br><input placeholder="Phone" type="text" id="phone" name="phone" value="${phone}">
+					<br><input placeholder="Address" type="text" id="address" name="address" value="${address}">
+					<br><input placeholder="Tag" type="text" id="tag" name="tag" value="${tag}">
+					<br><input placeholder="Menu URL" type="text" id="menuurl" name="menuurl" value="${menuurl}">
+					<br> <input type="file" name="file" id="file" /> <br>
+					<button type="submit" value="submit" class="new-restaurant-btn badge-pill badge-success">Add Restaurant</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<table border="1" cellpadding="5">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Menu URL</th>
+            </tr>
+            <c:forEach var="restaurant" items="${listResaurant}">
+                <tr>
+                    <td><c:out value="${restaurant.id}" /></td>
+                    <td><c:out value="${restaurant.name}" /></td>
+                    <td><c:out value="${restaurant.menuUrl}" /></td>
+                    <td><a href="/Orderingsystem/editRestaurant?id=<c:out value='${restaurant.id}' />">Edit</a></td>
+                    <td><a href="/Orderingsystem/deleteRestaurant?id=<c:out value='${restaurant.id}' />">Delete</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+</body>
+
+</body>
+</html>

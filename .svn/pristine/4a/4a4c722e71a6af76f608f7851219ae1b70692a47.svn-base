@@ -1,0 +1,207 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.model.User;
+
+public class UserDAOImp implements UserDAO {
+
+	public int addNewUser(User user) throws Exception {
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		String insertUserStatement = "INSERT INTO `orderiingsystem`.`user` (`Full_name`, `Skype_id`, `Email`, `Password`, `Picture`) VALUES ('"
+				+ user.getFullname() + "', '" + user.getSkypeID() + "', '" + user.getEmail() + "', '"
+				+ user.getPassword() + "', '" + user.getPicture() + "');";
+
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement(insertUserStatement);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			return e.getErrorCode();
+		}
+		return 0;
+	}
+
+	public int editUserProfile(User user) throws Exception {
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		String updateUserStatement = "UPDATE `orderiingsystem`.`user` SET `Full_name`='" + user.getFullname()
+				+ "', `Skype_id`='" + user.getSkypeID() + "', `Email`='" + user.getEmail() + "', `Password`='"
+				+ user.getPassword() + "', `Picture`='" + user.getPicture() + "' WHERE `User_id`='" + user.getId()
+				+ "';";
+
+		try {
+
+			PreparedStatement preparedStatement = connection.prepareStatement(updateUserStatement);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			return e.getErrorCode();
+		}
+		return 0;
+	}
+
+	public User findByEmailAndPassword(User user) throws Exception {
+
+		String selectUserStatement = "SELECT " + "User_id, Full_name, Skype_id, Email, Password, Picture" + " "
+				+ "FROM user " + "WHERE Email='" + user.getEmail() + "' AND Password='" + user.getPassword() + "';";
+
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(selectUserStatement);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (!rs.next()) {
+				connection.close();
+				return null;
+			}
+			user = populateUserFields(user, rs);
+			connection.close();
+			return user;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<User> selectAllUsersExceptUserProfile(User user) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> allUsers = new ArrayList<User>();
+
+		query = "select * from user where User_id != " + user.getId();
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+
+			while (rs.next()) {
+				User eachUserInList = new User();
+				eachUserInList.setId(rs.getInt("User_id"));
+				eachUserInList.setFullname(rs.getString("Full_name"));
+				allUsers.add(eachUserInList);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("Select All failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return allUsers;
+	}
+
+	private User populateUserFields(User user, ResultSet rs) throws SQLException {
+		user.setFullname(rs.getString("Full_name"));
+		user.setSkypeID(rs.getString("Skype_id"));
+		user.setPicture(rs.getString("Picture"));
+		user.setId(rs.getInt("User_id"));
+		user.setEmail(user.getEmail());
+		user.setPassword(user.getPassword());
+		return user;
+	}
+	
+	public List<User> selectAllUsers() {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		List<User> allUsers = new ArrayList<User>();
+
+		query = "select * from user";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+
+
+			while (rs.next()) {
+				User eachUserInList = new User();
+				eachUserInList.setId(rs.getInt("User_id"));
+				eachUserInList.setFullname(rs.getString("Full_name"));
+				allUsers.add(eachUserInList);
+			}
+
+		} catch (Exception ex) {
+			System.out.println("Select All failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+
+		return allUsers;
+	}
+	
+	public void deleteUserById(User user) {
+		
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		query = "DELETE FROM user WHERE User_id = '"+ user.getId() +"';";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+		    stmt.executeUpdate(query);
+
+		} catch (Exception ex) {
+			System.out.println("Deletion failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+	}
+	
+	public void insertInSubscription(User user1, User user2) {
+
+		Connection conn = null;
+		ResultSet rs = null;
+		String query = "";
+		Statement stmt = null;
+
+		ConnectionManager connectionManager = new ConnectionManager();
+
+		query = "INSERT INTO `subscribtion` (`User_id1`, `User_id2`) VALUES ('" + user1.getId() + "', '" + user2.getId()
+				+ "');";
+
+		try {
+			conn = connectionManager.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+
+		} catch (Exception ex) {
+			System.out.println("Subscription failed: An Exception has occurred! " + ex);
+		}
+
+		ConnectionManager.closeConnection(stmt, rs, conn);
+	}
+
+}

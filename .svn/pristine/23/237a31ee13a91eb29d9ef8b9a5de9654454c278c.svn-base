@@ -1,0 +1,26 @@
+package com.poet.ordering.system.model;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import javax.servlet.http.Part;
+
+public class ImageUtility {
+
+	public void uploadImage(User user, Part filePart) {
+
+		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+		if (!fileName.isEmpty()) {
+
+			user.setPicture("D://usersProfileImages//" + fileName);
+			try {
+				filePart.write("D://usersProfileImages//" + fileName);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}

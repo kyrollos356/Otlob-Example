@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css'>
+<link
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<title>Insert title here</title>
+</head>
+<body>
+	<t:header />
+	<div class="container" style="margin-top: 20px; margin-bottom: 20px;">
+
+
+
+		<div class="col-md-8  col-xs-12">
+			<img
+				src="https://logoobject.com/wp-content/uploads/2017/12/Restaurant-Logo-Elemet-820x820.png"
+				class="img-thumbnail picture hidden-xs" height="180" width="180" />
+			<img
+				src="https://logoobject.com/wp-content/uploads/2017/12/Restaurant-Logo-Elemet-820x820.png"
+				class="img-thumbnail visible-xs picture_mob" height="180"
+				width="180" />
+			<div class="header">
+				<h1>
+					<b>${restaurant.name}</b>
+				</h1>
+
+				<c:choose>
+					<c:when test="${not empty restaurant.menuUrl}">
+						<h4>
+							<b>Menu URL:</b> ${restaurant.menuUrl}
+						</h4>
+					</c:when>
+
+				</c:choose>
+
+				<c:choose>
+					<c:when test="${not empty restaurant.menuImage}">
+						<h4>
+							<b>Menu URL:</b> ${restaurant.menuImage}
+						</h4>
+					</c:when>
+
+				</c:choose>
+				
+				<h4>
+					<b>Addresses:</b> ${addresses}
+				</h4>
+				<h4>
+					<b>Tags:</b> ${tags}
+				</h4>
+				<h4>
+					<b>Phone Numbers:</b> ${phoneNumbers}
+				</h4>
+
+
+
+
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>

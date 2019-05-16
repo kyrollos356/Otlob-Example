@@ -1,0 +1,68 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix="header" tagdir="/WEB-INF/tags"%>
+<!DOCTYPE html>
+<html>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/restaurant/newRestaurant.css" />
+<script
+	src="${pageContext.request.contextPath}/js/restaurant/newRestaurantValidation.js"></script>
+<title>New Restaurant</title>
+<header:header />
+<div class="midcontainer">
+	<div class="midwell">
+		<p class="ptitle">New Restaurant</p>
+		<div class="middle">
+			<form action="RestaurantServlet" name="newRestaurant"
+				onSubmit="return click_handler()" method="POST"
+				enctype="multipart/form-data">
+				<p>Restaurant name:</p>
+				<input placeholder="Restaurant name" type="text" id="restaurantname"
+					name="restaurantname" value="${restaurantname}"> <br>
+				<p>Phone:</p>
+				<input placeholder="Phone" type="text" id="phone" name="phone"
+					value="${phone}"> <br>
+				<p>Address:</p>
+				<input placeholder="Address" type="text" id="address" name="address"
+					value="${address}"> <br>
+				<p>Tag:</p>
+				<input placeholder="Tag" type="text" id="tag" name="tag"
+					value="${tag}"> <br>
+				<p>Menu URL:</p>
+				<input placeholder="Menu URL" type="text" id="menuurl"
+					name="menuurl" value="${menuurl}"> <br> <input
+					type="file" name="file" id="file" /> <br>
+				<button id="addRestaurant" name="addRestaurant" type="submit"
+					value="submit" class="new-restaurant-btn badge-pill badge-success">Add
+					Restaurant</button>
+			</form>
+		</div>
+	</div>
+</div>
+<table border="1" cellpadding="5">
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Menu URL</th>
+	</tr>
+	<c:forEach var="restaurant" items="${listResaurant}">
+		<tr>
+			<td><c:out value="${restaurant.id}" /></td>
+			<td><c:out value="${restaurant.name}" /></td>
+			<td><c:out value="${restaurant.menuUrl}" /></td>
+			<td><a
+				href="/Orderingsystem/RestaurantServlet?id=<c:out value='${restaurant.id}' />">Edit</a></td>
+			<td><a
+				href="/Orderingsystem/deleteRestaurant?id=<c:out value='${restaurant.id}' />">Delete</a></td>
+		</tr>
+	</c:forEach>
+</table>
+</body>
+
+</body>
+</html>

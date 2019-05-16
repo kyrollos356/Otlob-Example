@@ -1,0 +1,98 @@
+package com.poet.ordering.system.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.poet.ordering.system.connection.ConnectionManager;
+import com.poet.ordering.system.model.Order;
+import com.poet.ordering.system.model.User;
+import com.poet.ordering.system.service.UserServiceImp;
+
+public class OrderDAOImp implements OrderDAO{
+	
+	private static OrderDAOImp instance;
+	private UserServiceImp userService = UserServiceImp.getInstance();
+
+	public static OrderDAOImp getInstance() {
+		if (instance == null) {
+			instance = new OrderDAOImp();
+		}
+		return instance;
+	}
+
+	@Override
+	public void addOrder(Order order) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String insertOrder = "INSERT INTO orders (`Content`, `User_id`, `Order_request_id`) VALUES ('"
+				+ order.getContent() + "', '" + order.getUserId() + "', '" + order.getOrderRequestId() + "');";
+		
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement(insertOrder);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void editOrder(Order order) throws Exception {
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+		
+		String editOrder = "UPDATE orders SET Content='"+ order.getContent() + "', User_id=" + order.getUserId() + " ,Order_request_id="
+		+ order.getOrderRequestId() + " WHERE Order_id=" + order.getId() + ";";
+		
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement(editOrder);
+			preparedStatement.executeUpdate();
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List viewAllOrders(int orderRequestId) throws Exception {
+		List<Order> ordersList = new ArrayList<>();
+		
+		ConnectionManager connectionManager = new ConnectionManager();
+		Connection connection = connectionManager.getConnection();
+
+		String viewAllOrders = "SELECT * from orders WHERE Order_request_id=" + orderRequestId;
+		
+		Connection conn = connectionManager.getConnection();
+		Statement stmt = null;
+		stmt = conn.createStatement();
+		try {
+			ResultSet rs = stmt.executeQuery(viewAllOrders);
+			while (rs.next()) {
+				int id = rs.getInt("Order_id");
+				String content = rs.getString("Content");
+				int userId = rs.getInt("User_id");
+				User user = userService.findbyID(Integer.toString(userId));
+				
+				Order order = new Order();
+				order.setId(id);
+				order.setContent(content);
+				order.setUserId(userId);
+				order.setUserName(user.getFullname());
+				ordersList.add(order);
+			}
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ordersList;
+	}
+
+}

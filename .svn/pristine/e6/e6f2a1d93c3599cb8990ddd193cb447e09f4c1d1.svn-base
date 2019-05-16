@@ -1,0 +1,12 @@
+package com.poet.ordering.system.dao.restaurant;
+
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+
+public interface PhoneDAO {
+	
+	public void insertPhone(Phone phone, Restaurant restaurant) throws Exception;
+	public void editPhone(Phone phone) throws Exception;
+	public void deletePhone(int id) throws Exception;
+	public Phone getPhone(int id) throws Exception;
+}

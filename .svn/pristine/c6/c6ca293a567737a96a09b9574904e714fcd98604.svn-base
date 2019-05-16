@@ -1,0 +1,26 @@
+package com.poet.ordering.system.service;
+
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.dao.OrderRequestDAO;
+import com.poet.ordering.system.dao.OrderRequestDAOImp;
+
+public class OrderService {
+
+	public void enterUserOrder(OrderRequest userOrderInfo) throws Exception {
+		OrderRequestDAOImp insertIntoDatabase = new OrderRequestDAOImp();
+		insertIntoDatabase.insertOrderInfo(userOrderInfo);
+	}
+
+	public void cancelRequest(OrderRequest userOrderInfo) throws Exception {
+		OrderRequestDAOImp deleteFromDataBase = new OrderRequestDAOImp();
+		deleteFromDataBase.deleteUserOrder(userOrderInfo);
+	}
+
+	public void sendEamilToSubscribers(OrderRequest userOrderInfo) throws Exception {
+		OrderRequestDAOImp selectUserSubscibers = new OrderRequestDAOImp();
+		selectUserSubscibers.selectUserFollowers(userOrderInfo);
+
+		SendMailTLS sendmail = new SendMailTLS();
+		sendmail.sendMail("email", "token");
+	}
+}

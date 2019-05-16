@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+	<div class="row">
+
+		<div class="col-xs-12  col-md-3 ">
+			<img src="businessman.jpg" width=350>
+		</div>
+
+		<div class="col-xs-12 col-md-5">
+		<span class="glyphicon glyphicon-envelope"></span> Sama.Fouad@poet-egypt.com <br>
+		<i style="font-size:24px" class="fa">&#xf17e;</i> Sama Foad <br>
+		</div>
+
+		<div class="col-xs-12 col-md-4">
+			<c:forEach var="user" items="${Subscribers}">
+				<tr class="tablebody">
+					<td class="tabled"><a class="UserURL" href="">
+							${user.fullname} </a></td>
+					<td class="tabled">
+						<form action="AllUsers" method="post">
+							<input type="hidden" name="idOfUserFromJSP" value="${user.id}">
+							<input type="hidden" name="SubscriberOrUnsubscriber"
+								value="Unsubscribe">
+							<button id="SubscribeButton" class="subbtn">Unsubscribe</button>
+						</form>
+					</td>
+				</tr>
+			</c:forEach>
+		</div>
+
+	</div>
+
+</body>
+</html>

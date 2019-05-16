@@ -1,0 +1,22 @@
+function click_handler() {
+
+	var restaurantName = document.forms["newRestaurant"]["restaurantname"].value;
+	var phone = document.forms["newRestaurant"]["phone"].value;
+	var address = document.forms["newRestaurant"]["address"].value;
+
+	if (restaurantName == "") {
+		alert("Please input restaurant Name");
+		return false;
+	}
+
+	if (phone == "") {
+		alert("Please input phone");
+		return false;
+	}
+
+	if (address == "") {
+		alert("Please input address");
+		return false;
+	}
+	return true;
+}

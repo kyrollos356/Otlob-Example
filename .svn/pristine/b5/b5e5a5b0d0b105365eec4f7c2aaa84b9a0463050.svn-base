@@ -1,0 +1,11 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.model.OrderRequest;
+
+public interface OrderRequestService {
+
+	public List<OrderRequest> viewAllOrderRequests();
+
+}

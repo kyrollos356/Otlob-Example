@@ -1,0 +1,5 @@
+# Static information
+JDBC_DRIVER com.mysql.jdbc.Driver
+DB_URL jdbc:mysql://localhost/orderiingsystem?useSSL=false
+USER root
+PASS 1234

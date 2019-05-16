@@ -1,0 +1,27 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.OrderRequestDAOImp;
+import com.poet.ordering.system.model.OrderRequest;
+
+
+public class OrderRequestServiceImp implements OrderRequestService {
+		
+	OrderRequestDAOImp orderRequestDAO = new OrderRequestDAOImp();
+	private static OrderRequestServiceImp instance;
+
+	public static OrderRequestServiceImp getInstance() {
+		if (instance == null) {
+			instance = new OrderRequestServiceImp();
+		}
+		return instance;
+	}
+	
+	
+	public List<OrderRequest> viewAllOrderRequests() {
+		return orderRequestDAO.selectAllOpenOrderRequestsSortedByExpiryDate();
+	}
+	
+	
+}

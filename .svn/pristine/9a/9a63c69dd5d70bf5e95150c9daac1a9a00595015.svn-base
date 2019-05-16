@@ -1,0 +1,50 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.RestaurantDAOImp;
+import com.poet.ordering.system.model.Restaurant;
+
+public class RestaurantServiceImp {
+	RestaurantDAOImp restaurantDAO = new RestaurantDAOImp();
+	private static RestaurantServiceImp instance;
+	
+	public static RestaurantServiceImp getInstance() {
+		if (instance == null) {
+			instance = new RestaurantServiceImp();
+		}
+		return instance;
+	}
+	
+	private RestaurantServiceImp() {
+
+	}
+	
+	public boolean addNewRestaurant(Restaurant restaurant) throws Exception {
+		restaurantDAO.insertRestaurant(restaurant);
+		return false;
+	}
+	
+	public List viewAll() throws Exception {
+		List restaurantList = restaurantDAO.viewAllRestaurants();
+		return restaurantList;
+	}
+	
+	public Restaurant viewRestaurant(int id) throws Exception {
+		Restaurant restaurant = restaurantDAO.getRestaurant(id);
+		return restaurant;
+	}
+	
+	public void deleteRestaurant(int id) throws Exception {
+		restaurantDAO.deleteRestaurant(id);
+	}
+	
+	public void editRestaurant(Restaurant restaurant) throws Exception {
+		restaurantDAO.editRestaurant(restaurant);
+	}
+
+	public List viewRestaurantSearchResults(String search) throws Exception {
+		List restaurantList = restaurantDAO.selectRestaurantsInSearch(search);
+		return restaurantList;
+	}
+}

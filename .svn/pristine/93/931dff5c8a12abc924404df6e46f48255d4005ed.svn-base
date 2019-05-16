@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="newRestaurant.css" />
+<title>Edit Restaurant</title>
+</head>
+<body>
+<br>
+	<br>
+	<div class="midcontainer">
+		<div class="midwell">
+			<p class="ptitle">Edit Restaurant</p>
+			<div class="middle">
+				<form action="editRestaurant" name="editRestaurant"
+					onSubmit="return click_handler()" method="POST"
+					enctype="multipart/form-data">
+					<input placeholder="Restaurant Id" type="hidden" id="restaurantId" name="restaurantId" value="${restaurantId}">
+					<br><input placeholder="Restaurant name" type="text" id="restaurantname" name="restaurantname" value="${restaurantName}">
+					<br><input placeholder="Phone" type="text" id="phone" name="phone" value="${restaurantPhone}">
+					<br><input placeholder="Address" type="text" id="address" name="address" value="${restaurantAddress}">
+					<br><input placeholder="Tag" type="text" id="tag" name="tag" value="${restaurantTag}">
+					<br><input placeholder="Menu URL" type="text" id="menuurl" name="menuurl" value="${restaurantMenuUrl}">
+					<br> <input type="file" name="file" id="file" /> <br>
+					<button type="submit" value="submit" class="new-restaurant-btn badge-pill badge-success">Save</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

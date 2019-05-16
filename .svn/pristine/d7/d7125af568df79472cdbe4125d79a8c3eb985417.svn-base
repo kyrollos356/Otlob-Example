@@ -1,0 +1,83 @@
+body{
+	background-color: #f7f6f6;
+}
+
+.middle{
+	width: 400px;
+ 	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	font-family:'Quicksand';
+	font-weight: bold;
+	font-size:16px;
+}
+
+.ptitle{
+	 padding-left: 20px;
+	 padding-top: 10px;
+	font-family:'Quicksand';
+	font-weight: bold;
+	font-size:45px;
+	color:#93b32d;
+	
+}
+.midcontainer{
+	padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+	width:600px;
+}
+.midwell{
+	
+	width:550px;
+	padding: 19px;
+    margin-bottom: 20px;
+    background-color: #333333;
+    border: 1px solid #e3e3e3;
+    border-radius: 15px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+	
+}
+
+.form-group{
+	vertical-align: middle;
+	
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 10px 15px;
+    margin: 12px auto;
+    display: inline-block;
+    border: 1px solid lightgray;
+    box-sizing: border-box;
+    color:black;
+    }
+    
+    
+.signbtn {
+	
+	background-color: #93b32d;
+	display: inline-block;
+    min-width: 10px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+    color: #000;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 10px;
+	margin: auto;
+    padding: 14px 20px;
+    width: 100%;
+    border: none;
+    cursor: pointer;	
+	text-transform: none;
+	overflow: visible;
+	box-sizing: border-box;
+	
+    }
+   
+    

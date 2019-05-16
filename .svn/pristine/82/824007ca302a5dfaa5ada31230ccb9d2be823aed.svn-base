@@ -1,0 +1,32 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.OrderDAOImp;
+import com.poet.ordering.system.model.Order;
+
+public class OrderServiceImp {
+	
+	OrderDAOImp orderDAO = new OrderDAOImp();
+	private static OrderServiceImp instance;
+	
+	public static OrderServiceImp getInstance() {
+		if (instance == null) {
+			instance = new OrderServiceImp();
+		}
+		return instance;
+	}
+	
+	public void addNewOrder(Order order) throws Exception {
+		orderDAO.addOrder(order);
+	}
+	
+	public void editOrder(Order order) throws Exception {
+		orderDAO.editOrder(order);
+	}
+	
+	public List viewAllOrders(int orderRequestId) throws Exception {
+		List ordersList = orderDAO.viewAllOrders(orderRequestId);
+		return ordersList;
+	}
+}

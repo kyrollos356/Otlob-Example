@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="signup.css" />
+
+</head>
+<body>
+
+<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
+
+	<script type="text/javascript">
+		function countDown(timeremained, timer) {
+			var element = document.getElementById(timer);
+			element.innerHTML = "Order time out is : " + timeremained
+					+ " minutes";
+			if (timeremained < 1) {
+				clearTimeout(counter);
+				element.innerHTML = '<h3>Order Timed out!</h3>';
+			
+			}
+			timeremained--;
+			var counter = setTimeout('countDown(' + timeremained + ',"' + timer
+					+ '")', 60000);
+		} function enableData() {
+            document.getElementById("addorder").disabled = false;
+        }
+	</script>
+
+	<h3 id="timer"></h3>
+	<script type="text/javascript">
+		countDown( "${orderInfo.timeout}" , "timer");
+	</script>
+<!-- ---------------------------------------------------------------------------------------------------------------------------- -->		
+	<p name="content" value="${orderContent.content}">order should be here</p>
+	<button class="signbtn badge-pill badge-success" onclick="enableData()"
+		value="Submit">Add order</button>
+		
+	 <input type="text" id="addorder"  disabled><br>
+  </body>
+</html>
+<!-- String(document.getElementById("username").value); -->
+<!-- document.getElementById("say").innerHTML = "Correct username and password , welcome !"; -->

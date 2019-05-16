@@ -1,0 +1,88 @@
+package com.poet.ordering.system.servlets.orderRequests;
+
+import java.io.IOException;
+
+import com.poet.ordering.system.model.Address;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.service.AddressServiceImp;
+import com.poet.ordering.system.service.OrderRequestServiceImp;
+import com.poet.ordering.system.service.PhoneServiceImp;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.TagServiceImp;
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+
+@WebServlet("/CreateOrderServlet")
+public class CreateOrderRequestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private OrderRequestServiceImp orderRequestService = OrderRequestServiceImp.getInstance();
+	private RestaurantServiceImp restaruantService = RestaurantServiceImp.getInstance();
+	private PhoneServiceImp phoneService = PhoneServiceImp.getInstance();
+	private AddressServiceImp addressService = AddressServiceImp.getInstance();
+	private TagServiceImp tagService = TagServiceImp.getInstance();
+
+	public CreateOrderRequestServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			Restaurant restaurant = restaruantService.viewRestaurant(57);
+			Phone phone = phoneService.viewPhone(57);
+			Address address = addressService.viewAddress(57);
+			Tag tag = tagService.viewTag(57);
+			request.setAttribute("restaurantName", restaurant.getName());
+			request.setAttribute("restaurantMenuUrl", restaurant.getMenuUrl());
+			request.setAttribute("restaurantPhone", phone.getPhoneNumber());
+			request.setAttribute("restaurantAddress", address.getAddress());
+			request.setAttribute("restaurantTag", tag.getTag());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		request.getRequestDispatcher("/jsp/order/createOrderRequest.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getParameter("closeRequest") == null){
+			createOrderRequest(request, response);
+		} else if(request.getParameter("closeRequest").equals("Close Request")) {
+			changeRequestStatus(request, response, "Closed");
+		} else if(request.getParameter("closeRequest").equals("Archive Request")) {
+			changeRequestStatus(request, response, "Archived");
+		} 
+		request.getRequestDispatcher("OrderServlet").forward(request, response);
+	}
+	
+	private void createOrderRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setTimeout(request.getParameter("timeout"));
+		orderRequest.setStatus("Open");
+		// TODO: change IDs
+		orderRequest.setUserId(5);
+		orderRequest.setRestaurantId(57);
+		try {
+			orderRequestService.addNewRestaurant(orderRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void changeRequestStatus(HttpServletRequest request, HttpServletResponse response, String status) throws ServletException, IOException {
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setId(Integer.parseInt(request.getParameter("orderRequestId")));
+		orderRequest.setStatus(status);
+		try {
+			orderRequestService.changeStatus(orderRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

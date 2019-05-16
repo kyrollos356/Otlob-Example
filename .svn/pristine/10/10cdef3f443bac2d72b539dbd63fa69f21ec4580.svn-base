@@ -1,0 +1,100 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.UserDAOImp;
+import com.poet.ordering.system.model.User;
+
+public class UserServiceImp implements UserService {
+	UserDAOImp userDAO = new UserDAOImp();
+	private final static int DUPLICATE_USERNAME_ERROR_CODE = 1062;
+	private static UserServiceImp instance;
+
+	public static UserServiceImp getInstance() {
+		if (instance == null) {
+			instance = new UserServiceImp();
+		}
+		return instance;
+	}
+
+	private UserServiceImp() {
+
+	}
+
+	public boolean addNewUser(User user)  {
+		int errorCode = userDAO.addNewUser(user);
+		if (errorCode == DUPLICATE_USERNAME_ERROR_CODE) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean editUserProfile(User user) {
+		int errorCode = userDAO.editUserProfile(user);
+		if (errorCode == DUPLICATE_USERNAME_ERROR_CODE) {
+			return true;
+		}
+		return false;
+	}
+
+	public User findByEmailAndPassword(User user)  {
+		return userDAO.findByEmailAndPassword(user);
+	}
+
+	public void adminDeleteUserById(User user) {
+		userDAO.deleteUserById(user);
+	}
+
+	public void insertInSubscription(User user1, User user2) {
+		userDAO.insertInSubscription(user1, user2);
+	}
+
+	public void deleteFromSubscription(User user1, User user2) {
+		userDAO.deleteFromSubscription(user1, user2);
+	}
+
+	public List<User> selectUnsubscribers(User user) {
+		return userDAO.selectNonSubscriptionsByUserId(user);
+	}
+
+	public List<User> selectSubscriptions(User user) {
+		return userDAO.selectSubscriptionsByUserId(user);
+	}
+
+	public List<User> viewSubscriptionSearchResults(String search, User user) {
+		return userDAO.selectUserInSearchWhereSubscribed(search, user);
+	}
+
+	public List<User> viewNonSubscriptionSearchResults(String search, User user) {
+		return userDAO.selectUserInSearchWhereNotSubscribed(search, user);
+	}
+
+	public User findbyID(String id) {
+
+		return userDAO.findbyID(id);
+
+	}
+
+	public List<User> selectSubscribers(User user) {
+		return userDAO.selectSubscribersByUserId(user);
+	}
+
+	public boolean checkIfSubscribed(User user, User selectedUser) {
+		return userDAO.checkIfSubscribed(user, selectedUser);
+	}
+
+	public void setFirstname(User user) {
+
+		String[] firstname = new String[1];
+		firstname = user.getFullname().split("\\s");
+
+		user.setFirstname(firstname[0]);
+
+	}
+	
+	public boolean isAdmin(User user) {
+		return userDAO.selectisAdminFromUser(user);
+	}
+
+
+}

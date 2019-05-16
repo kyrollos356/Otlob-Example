@@ -1,0 +1,54 @@
+package com.poet.ordering.system.servlets.users;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.dao.UserDAOImp;
+import com.poet.ordering.system.model.User;
+import com.poet.ordering.system.service.UserServiceImp;
+
+/**
+ * Servlet implementation class AllUsersServlet
+ */
+@WebServlet("/AllUsers")
+public class AllUsersServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private UserServiceImp userServiceImp = UserServiceImp.getInstance();
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		User user = new User();
+		//To Do get id of user logged in from JSP
+		user.setId(1);
+		
+		List<User> allUsersExceptUserProfile = new ArrayList<User>();
+		allUsersExceptUserProfile = userServiceImp.selectAllUsersExceptUserProfile(user);
+		
+		request.setAttribute("users", allUsersExceptUserProfile);
+		request.getRequestDispatcher("allUsers.jsp").forward(request, response);
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User user1 = new User();
+		User user2 = new User();
+		//TO DO get id from jsp
+		user1.setId(1);
+		user2.setId(Integer.parseInt(request.getParameter("idOfUserFromJSP")));
+		userServiceImp.insertInSubscription(user1, user2);
+		
+		List<User> allUsersExceptUserProfile = new ArrayList<User>();
+		allUsersExceptUserProfile = userServiceImp.selectAllUsersExceptUserProfile(user1);
+
+		request.setAttribute("users", allUsersExceptUserProfile);
+		request.getRequestDispatcher("allUsers.jsp").forward(request, response);	
+	}
+
+}

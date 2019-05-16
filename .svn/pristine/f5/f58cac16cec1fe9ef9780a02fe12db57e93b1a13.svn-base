@@ -1,0 +1,64 @@
+package com.poet.ordering.system.servlets.restaurants;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.Address;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+import com.poet.ordering.system.service.AddressService;
+import com.poet.ordering.system.service.AddressServiceImp;
+import com.poet.ordering.system.service.PhoneServiceImp;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.TagServiceImp;
+
+@WebServlet("/restaurantProfile")
+public class RestaurantProfileServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		Restaurant restaurant = new Restaurant();
+		RestaurantServiceImp restaurantServiceImp = RestaurantServiceImp.getInstance();
+
+		Address address = new Address();
+		AddressServiceImp addressServiceImp = AddressServiceImp.getInstance();
+
+		Tag tag = new Tag();
+		TagServiceImp tagServiceImp = TagServiceImp.getInstance();
+
+		Phone phone = new Phone();
+		PhoneServiceImp phoneServiceImp = PhoneServiceImp.getInstance();
+
+		Integer idRestaurant = Integer.parseInt(request.getParameter("id"));
+
+		try {
+			restaurant = restaurantServiceImp.viewRestaurant(idRestaurant);
+			phone = phoneServiceImp.viewPhone(idRestaurant);
+			tag = tagServiceImp.viewTag(idRestaurant);
+			address = addressServiceImp.viewAddress(idRestaurant);
+
+			request.setAttribute("restaurant", restaurant);
+			request.setAttribute("phoneNumbers", phone.getPhoneNumber());
+			request.setAttribute("tags", tag.getTag());
+			request.setAttribute("addresses", address.getAddress());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+
+		request.getRequestDispatcher("/jsp/restaurant/restaurantProfile.jsp").forward(request, response);
+
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}

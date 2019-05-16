@@ -1,0 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="signup.css" />
+
+</head>
+
+<body>
+	<fieldset>
+		<form action="CreateOrderServlet" method="get"
+			onsubmit="required()">
+
+			<legend>Order info</legend>
+
+			<h3>restaurant name : ${restaurantname}</h3>
+
+			<label>Order Info:</label> <br>Order time out : <input
+				id="timeout" type="number" step="1" name="timeout"
+				required="required"  min="1"/> <br>
+				 Order your items here 
+				 <br> <textarea  rows="10" cols="30" name="itemsordered" placeholder="enter items you want to order here"></textarea>
+			<br>
+			<button class="signbtn badge-pill badge-success" type="Submit"
+				value="Submit">Create order</button>
+				
+
+		</form>
+	</fieldset>
+</body>
+</html>

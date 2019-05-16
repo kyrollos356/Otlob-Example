@@ -1,0 +1,25 @@
+
+
+.navbar{
+	background-color: #333333;
+	height: 55px;
+}
+
+.container-fluid{
+	height: 55px;
+}
+
+.navbar-brand{
+	background-color: #333333;
+	padding:10px 30px;
+}
+
+a{
+	color: #93b32d;
+	font-size: 18px;
+	font-family:'Quicksand';
+	font-weight: bold;
+}
+body {
+	background-color: #f7f6f6;
+}

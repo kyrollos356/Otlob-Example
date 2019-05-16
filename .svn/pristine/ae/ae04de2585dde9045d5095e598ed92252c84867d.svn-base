@@ -1,0 +1,125 @@
+package com.poet.ordering.system.servlets.restaurants;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import com.poet.ordering.system.model.Address;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+import com.poet.ordering.system.service.AddressServiceImp;
+import com.poet.ordering.system.service.PhoneServiceImp;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.TagServiceImp;
+
+/**
+ * Servlet implementation class EditRestaurantServlet
+ */
+@WebServlet("/editRestaurant")
+@MultipartConfig
+public class EditRestaurantServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private RestaurantServiceImp restaruantService = RestaurantServiceImp.getInstance();
+	private PhoneServiceImp phoneService = PhoneServiceImp.getInstance();
+	private AddressServiceImp addressService = AddressServiceImp.getInstance();
+	private TagServiceImp tagService = TagServiceImp.getInstance();
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public EditRestaurantServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		try {
+			Restaurant restaurant = new Restaurant();
+			Phone phone = new Phone();
+			Address address = new Address();
+			Tag tag = new Tag();
+			restaurant = restaruantService.viewRestaurant(id);
+			phone = phoneService.viewPhone(id);
+			address = addressService.viewAddress(id);
+			tag = tagService.viewTag(id);
+
+			request.setAttribute("restaurantId", restaurant.getId());
+			request.setAttribute("restaurantName", restaurant.getName());
+			request.setAttribute("restaurantMenuUrl", restaurant.getMenuUrl());
+			request.setAttribute("restaurantMenuImage", restaurant.getMenuImage());
+			request.setAttribute("restaurantPhone", phone.getPhoneNumber());
+			request.setAttribute("restaurantAddress", address.getAddress());
+			request.setAttribute("restaurantTag", tag.getTag());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.getRequestDispatcher("editRestaurant.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		editRestaurant(request, response);
+	}
+	
+	private void editRestaurant(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Restaurant restaurant = new Restaurant();
+		Phone phone = new Phone();
+		Address address = new Address();
+		Tag tag = new Tag();
+		int id = Integer.parseInt(request.getParameter("restaurantId"));
+		restaurant.setId(id);
+		restaurant.setName(request.getParameter("restaurantname"));
+		restaurant.setMenuUrl(request.getParameter("menuurl"));
+		restaurant.setUserId(5);
+		
+		Part filePart = request.getPart("file");
+		String fileName = getSubmittedFileName(filePart);
+		filePart.write("D:\\restaurantimages\\" + fileName);
+		
+		phone.setPhoneNumber(request.getParameter("phone"));
+		phone.setRestaurantId(id);
+		address.setAddress(request.getParameter("address"));
+		address.setRestaurantId(id);
+		tag.setTag(request.getParameter("tag"));
+		tag.setRestaurantId(id);
+
+		// TODO: change userId to current user
+		restaurant.setUserId(5);
+		
+		try {
+			restaruantService.editRestaurant(restaurant);
+			phoneService.editPhone(phone);
+			addressService.editAddress(address);
+			tagService.editTag(tag);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.getRequestDispatcher("newRestaurant.jsp").forward(request, response);
+	}
+	
+	private static String getSubmittedFileName(Part part) {
+	    for (String cd : part.getHeader("content-disposition").split(";")) {
+	        if (cd.trim().startsWith("filename")) {
+	            String fileName = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+	            return fileName.substring(fileName.lastIndexOf('/') + 1).substring(fileName.lastIndexOf('\\') + 1); // MSIE fix.
+	        }
+	    }
+	    return null;
+	}
+
+}

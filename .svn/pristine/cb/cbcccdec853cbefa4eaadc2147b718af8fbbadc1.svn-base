@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href='https://fonts.googleapis.com/css?family=Quicksand'
+	rel='stylesheet'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/restaurant/deleteRestaurant.css" />
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/common/basic.css" />
+<title>Delete Restaurant</title>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="midcontainer">
+				<div class="midwell">
+					<form action="/Orderingsystem/RestaurantServlet">
+						<div class="cancel">
+							<a href="/Orderingsystem/RestaurantServlet"> <span
+								class="glyphicon glyphicon-remove"></span></a>
+						</div>
+					</form>
+					<p class="ptitle">Are You Sure You Want To Delete
+						${restaurantName} ?</p>
+					<div class="middle">
+						<form action="deleteRestaurant" name="deleteRestaurant"
+							method="POST" enctype="multipart/form-data">
+							<input placeholder="Restaurant Id" type="hidden"
+								id="restaurantId" name="restaurantId" value="${restaurantId}">
+							<button type="submit" value="submit"
+								class="delete-restaurant-btn badge-pill badge-success">Delete</button>
+						</form>
+						<br>
+						<!-- <form action="/Orderingsystem/RestaurantServlet">
+								<input type="submit" value="Cancel"
+									class="cancel-restaurant-btn badge-pill badge-success" />
+							</form> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

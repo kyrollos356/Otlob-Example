@@ -1,0 +1,9 @@
+
+
+.h2{
+	color: #93b32d;
+	font-size: 18px;
+	font-family:'Quicksand';
+	font-weight: bold;
+	
+}

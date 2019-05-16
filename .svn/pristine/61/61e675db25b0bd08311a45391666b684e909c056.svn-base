@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link href="allUsersRestaurants.css" rel="stylesheet">
+<link href="allUsers.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Order Request</title>
+</head>
+
+<body>
+
+	<c:if test = "${orderRequest.status == 'Open'}">
+	<form  action="OrderServlet" name="newOrder"
+		onSubmit="return click_handler()" method="POST"
+		enctype="multipart/form-data">
+		<h3>Add your order</h3>
+		<input type="text" id="content" name="content" value="${content}">
+		<button type="submit" value="submit">Add Order</button>
+	</form>
+	</c:if>
+<!-- 	TODO: change id to current user -->
+	<c:if test = "${orderRequest.status == 'Open' || (orderRequest.status == 'Closed' && orderRequest.userId == 5)}">
+	<c:if test = "${closeRequestButton != '' && orderRequest.userId == 6}">
+	<form action="CreateOrderServlet"  name="closeRequestFrom" method="post">
+		<input type="hidden" name="orderRequestId" value="${orderRequest.id}">
+		<button id="SubscribeButton" name="closeRequest" value="${closeRequestButton}" class="subbtn">${closeRequestButton}</button>
+	</form>
+	</c:if>
+	
+	<table border="1" cellpadding="5">
+		<tr>
+			<th>Name</th>
+			<th>Content</th>
+		</tr>
+		<c:forEach var="order" items="${listOrders}">
+			<tr>
+				<td><c:out value="${order.userName}" /></td>
+				<td><c:out value="${order.content}" /></td>
+			</tr>
+		</c:forEach>
+	</table>
+	</c:if>
+	${orderRequest.status}
+	<c:if test = "${orderRequest.status != 'Open' || (orderRequest.status == 'Closed' && orderRequest.userId != 6)}">
+	<p>${orderRequest.status}</p>
+	<h1>Sorry order closed</h1>
+	</c:if>
+</body>
+</html>

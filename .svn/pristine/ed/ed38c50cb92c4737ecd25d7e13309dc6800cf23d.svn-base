@@ -1,0 +1,110 @@
+package com.poet.ordering.system.servlets.users;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.User;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.UserServiceImp;
+
+@WebServlet("/SearchResults")
+public class SearchResultServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private RestaurantServiceImp restaurantServiceImp = RestaurantServiceImp.getInstance();
+	private UserServiceImp userServiceImp = UserServiceImp.getInstance();
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+
+		User user = new User();
+		// To Do get id of user logged in from JSP
+		user.setId(1);
+
+		String search = request.getParameter("search");
+		String radiobutton = request.getParameter("searchfilter");
+		
+		List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+		List<User> allSubscribers = new ArrayList<User>();
+		List<User> allUnsubscribers = new ArrayList<User>();
+	
+		
+		if(radiobutton.equals("all")) {
+		
+		restaurantList = restaurantServiceImp.viewRestaurantSearchResults(search);
+		request.setAttribute("restaurants", restaurantList);
+
+		allSubscribers = userServiceImp.viewSubscribtionSearchResults(search, user);
+		allUnsubscribers = userServiceImp.viewNonSubscribtionSearchResults(search, user);
+
+		request.setAttribute("Subscribers", allSubscribers);
+		request.setAttribute("Unsubscribers", allUnsubscribers);
+
+		request.setAttribute("searchentry", search);
+		request.getRequestDispatcher("searchResults.jsp").forward(request, response);
+		}
+		
+		else if(radiobutton.equals("restaurantsonly")) {
+			restaurantList = restaurantServiceImp.viewRestaurantSearchResults(search);
+			request.setAttribute("restaurants", restaurantList);
+			request.getRequestDispatcher("searchResults.jsp").forward(request, response);
+		}
+		
+		else if(radiobutton.equals("usersonly")) {
+			
+			allSubscribers = userServiceImp.viewSubscribtionSearchResults(search, user);
+			allUnsubscribers = userServiceImp.viewNonSubscribtionSearchResults(search, user);
+
+			request.setAttribute("Subscribers", allSubscribers);
+			request.setAttribute("Unsubscribers", allUnsubscribers);
+
+			request.setAttribute("searchentry", search);
+			request.getRequestDispatcher("searchResults.jsp").forward(request, response);
+			}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		User userProfile = new User();
+		User user2 = new User();
+		// TO DO get id from jsp
+		userProfile.setId(1);
+		user2.setId(Integer.parseInt(request.getParameter("idOfUserFromJSP")));
+
+		String search = request.getParameter("searchentry");
+
+		List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+
+		restaurantList = restaurantServiceImp.viewRestaurantSearchResults(search);
+		request.setAttribute("restaurants", restaurantList);
+
+		String SubscriberOrUnsubscriber = (String) request.getParameter("SubscriberOrUnsubscriber");
+
+		if (SubscriberOrUnsubscriber.equals("Subscribe"))
+			userServiceImp.insertInSubscription(userProfile, user2);
+		else
+			userServiceImp.deleteFromSubscription(userProfile, user2);
+
+		List<User> allSubscribers = new ArrayList<User>();
+		allSubscribers = userServiceImp.selectSubscribers(userProfile);
+
+		List<User> allUnsubscribers = new ArrayList<User>();
+		allUnsubscribers = userServiceImp.selectUnsubscribers(userProfile);
+
+		request.setAttribute("Subscribers", allSubscribers);
+		request.setAttribute("Unsubscribers", allUnsubscribers);
+		request.setAttribute("searchentry", search);
+		request.getRequestDispatcher("searchResults.jsp").forward(request, response);
+
+	}
+
+}

@@ -1,0 +1,54 @@
+package com.poet.ordering.system.servlets.orders;
+
+import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import com.poet.ordering.system.model.Order;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.poet.ordering.system.service.OrderServiceImp;
+import com.poet.ordering.system.model.OrderRequest;
+
+@WebServlet("/CreateOrderServlet")
+public class CreateOrderServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public CreateOrderServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Order orderContent = new Order(); 
+		OrderRequest orderInfo = new OrderRequest();
+		
+	//	orderInfo.setRestaurantName(request.getParameter("restaurantname"));//home
+	//	orderInfo.setRestaurantId(Integer.parseInt(request.getParameter("restaurantId")));//home
+	//	orderInfo.setUserId(Integer.parseInt(request.getParameter("userId")));//home
+	//	orderInfo.setOwnerName(request.getParameter("ownername"));//home
+		orderInfo.setTimeout(request.getParameter("timeout"));//jsp
+		//orderInfo.setStatus(request.getParameter("status"));//jsp
+		orderContent.setContent(request.getParameter("itemsordered"));//jsp
+		
+		
+		ZonedDateTime dateOfOrder = ZonedDateTime.now();
+		request.setAttribute("content", orderContent.getContent());
+		request.setAttribute("timeout", orderInfo.getTimeout());
+		request.getRequestDispatcher("requesterOrderInfo.jsp").forward(request, response);
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Order orderContent = new Order(); 
+		OrderRequest orderInfo = new OrderRequest();
+		
+	
+		
+
+	}
+}

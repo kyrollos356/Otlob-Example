@@ -1,0 +1,176 @@
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/common/basic.css" />
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/common/profile.css" />
+<link
+	href="${pageContext.request.contextPath}/css/common/allUsersRestaurants.css"
+	rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/user/allUsers.css"
+	rel="stylesheet">
+<script
+	src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="EditableContent.js"></script>
+<t:header />
+<title>Order Request</title>
+</head>
+<body>
+<c:if
+			test="${orderRequest.status != 'Open' || (orderRequest.status == 'Closed' && orderRequest.userId != user.id)}">
+			<p>${orderRequest.status}</p> 
+		<h1>Order closed</h1>
+			</c:if>
+		<c:if 
+			test="${orderRequest.status == 'Open' || (orderRequest.status == 'Closed' && orderRequest.userId == user.id)}"> 
+		<div class="container">
+			<div class="row">
+				<div class="title">
+					Order Page: <i class="name">${restaurant.name}</i>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3 col-sm-offset-1">
+					<img class="profile-img" src="restaurantplaceholder.gif">
+				</div>
+
+				<div class="col-sm-6 ">
+					<div class="skypeemail">
+						<c:choose>
+							<c:when test="${not empty restaurant.menuUrl}">
+								<p>Menu URL: ${restaurant.menuUrl}</p>
+							</c:when>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${not empty restaurant.menuImage}">
+								<p>Menu Image: ${restaurant.menuImage}</p>
+							</c:when>
+						</c:choose>
+						<p>Addresses: ${addresses}</p>
+						<p>Tags: ${tags}</p>
+						<p>Phone Numbers: ${phoneNumbers}</p>
+					</div>
+				</div>
+			</div>
+			<c:if test="${orderRequest.userId == user.id}">
+				<div class="row">
+					<div class="col-sm-2 col-sm-offset-9">
+						<form action="OrderRequest" method="post">
+							<input type="hidden" name="Cancel" value="CancelOrderRequest">
+							<input type="hidden" name="orderRequestId"
+								value="${orderRequest.id}">
+							<button id="cancelButton" class="greenbtn">Cancel Order</button>
+						</form>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${closeRequestButton != '' && orderRequest.userId == user.id}">
+				<form action="CreateOrderServlet" name="closeRequestFrom"
+					method="post">
+					<input type="hidden" name="orderRequestId"
+						value="${orderRequest.id}">
+					<button id="SubscribeButton" name="closeRequest"
+						value="${closeRequestButton}" class="subbtn">${closeRequestButton}</button>
+				</form>
+			</c:if>
+
+			<c:set var = "OrderSubmitted" scope = "session" value = "${userOrderSubmitted}"/>
+			<c:if test="${orderRequest.status == 'Open'}">
+				<c:if test="${userOrderSubmitted == false}">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1">
+
+							<div class="subtitle">Place your order below</div>
+							<form action="OrderRequest" method="post">
+								<textarea class="form-control" rows="5" id="OrderContent"
+									name="OrderContent" required></textarea>
+								<input type="hidden" name="SubmitOrder" value="AddOrder">
+								<button id="submitButton" class="greenbtn">Submit Order</button>
+							</form>
+
+						</div>
+					</div>
+				</c:if>
+			</c:if>
+			<br> <br>
+
+			<div class="row">
+
+				<table class="tableb" id="table" cellpadding="30">
+					<thead>
+						<tr class="tablehead">
+							<th class="tabled">User name</th>
+							<th class="tabled">Order Content</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<c:forEach var="order" items="${listOrders}">
+							<tr class="tablebody">
+								<td class="tabled"><a class="UserURL" href="#">
+										${order.userName} </a></td>
+								<td class="tabled">
+									<div id="EditContent">${order.content}</div>
+								</td>
+								<td><c:if test="${orderRequest.status == 'Open'}">
+									<c:if test="${loggedInUser.userId == order.userId}">
+										<div class="row" style="margin-top: 40px;">
+											<div class="col-md-6">
+												<div class="well well-sm"
+													style="padding: 1px; border-radius: 3px;">
+													<div class="text-right">
+														<a class="btn btn-success btn-green"
+															href="#reviews-anchor" id="open-review-box">Edit
+															Order</a>
+													</div>
+
+													<div class="row" id="post-review-box"
+														style="display: none;">
+														<div class="col-md-12">
+															<form accept-charset="UTF-8" action="OrderRequest"
+																method="post">
+																<input type="hidden" name="orderRequestId"
+																	value="${orderRequest.id}"> <input
+																	type="hidden" name="EditOrder" value="EditOrder">
+																<textarea class="form-control animated" cols="50"
+																	id="new-review" name="EditContent" rows="5">${order.content}</textarea>
+																<div class="text-right">
+																	<a class="btn btn-danger btn-sm" href="#"
+																		id="close-review-box"
+																		style="display: none; margin-right: 10px;"> <span
+																		class="glyphicon glyphicon-remove"></span>Cancel
+																	</a>
+																	<button class="btn btn-success btn-lg" type="submit">Save</button>
+																</div>
+															</form>
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+										</c:if>
+									</c:if></td>
+							</tr>
+						</c:forEach>
+
+					</tbody>
+				</table>
+
+			</div>
+			</div>
+</c:if>
+</body>
+</html>

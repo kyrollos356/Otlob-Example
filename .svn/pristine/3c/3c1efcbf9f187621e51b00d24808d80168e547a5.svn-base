@@ -1,0 +1,56 @@
+package com.poet.ordering.system.service;
+
+import java.util.List;
+
+import com.poet.ordering.system.dao.OrderRequestDAOImp;
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.model.User;
+
+public class OrderRequestServiceImp implements OrderRequestService {
+
+	OrderRequestDAOImp orderRequestDAO = new OrderRequestDAOImp();
+	private static OrderRequestServiceImp instance;
+
+	public static OrderRequestServiceImp getInstance() {
+		if (instance == null) {
+			instance = new OrderRequestServiceImp();
+		}
+		return instance;
+	}
+
+	public List<OrderRequest> viewAllOrderRequests() {
+		return orderRequestDAO.selectAllOpenOrderRequestsSortedByExpiryDate();
+	}
+
+	public void addNewRestaurant(OrderRequest orderRequest) throws Exception {
+		orderRequestDAO.createOrderRequest(orderRequest);
+	}
+
+	public OrderRequest selectRestaurantId(OrderRequest orderRequest) {
+		return orderRequestDAO.selectRestaurantIdFromOrderRequest(orderRequest);
+	}
+
+	public OrderRequest getOrderRequest(int id) throws Exception {
+		OrderRequest orderRequest = orderRequestDAO.getOrderRequest(id);
+		return orderRequest;
+	}
+	
+	public void changeStatus(OrderRequest orderRequest) throws Exception {
+		orderRequestDAO.changeStatus(orderRequest);
+	}
+
+	public void cancelOrderRequest(OrderRequest userOrderInfo) throws Exception {
+		OrderRequestDAOImp deleteFromDataBase = new OrderRequestDAOImp();
+		deleteFromDataBase.deleteUserOrderRequest(userOrderInfo);
+	}
+
+	public OrderRequest selectOrderRequestByUser(User user) {
+
+		return orderRequestDAO.selectOrderRequestByUser(user);
+
+	}
+
+	public OrderRequest selectRestaurantName(OrderRequest eachOrderRequestInList) {
+		return orderRequestDAO.selectRestaurantName(eachOrderRequestInList);
+	}
+}

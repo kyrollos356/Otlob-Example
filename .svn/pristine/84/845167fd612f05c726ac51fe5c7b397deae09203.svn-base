@@ -1,0 +1,45 @@
+package com.poet.ordering.system.servlets.users;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.User;
+import com.poet.ordering.system.service.imp.user.UserServiceImp;;
+
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private UserServiceImp userService = UserServiceImp.getInstance();
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		request.getSession().setAttribute("alert", "");
+
+		request.getRequestDispatcher("/jsp/user/login.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		User user = new User();
+		user.setEmail(request.getParameter("email"));
+		user.setPassword(request.getParameter("password"));
+
+		if (userService.findByEmailAndPassword(user) == null) {
+			request.getSession().setAttribute("alert", "Incorrect Email or Password");
+			request.getRequestDispatcher("/jsp/user/login.jsp").forward(request, response);
+		} else {
+			userService.setFirstname(user);
+			request.getSession().setAttribute("user", user);
+			response.sendRedirect("/home");
+
+		}
+
+	}
+
+}

@@ -1,0 +1,111 @@
+package com.poet.ordering.system.servlets.orderRequests;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.Address;
+import com.poet.ordering.system.model.OrderRequest;
+import com.poet.ordering.system.model.Phone;
+import com.poet.ordering.system.model.Restaurant;
+import com.poet.ordering.system.model.Tag;
+import com.poet.ordering.system.model.User;
+
+//import org.eclipse.jdt.internal.compiler.parser.ParserBasicInformation;
+
+import com.poet.ordering.system.service.AddressServiceImp;
+import com.poet.ordering.system.service.OrderRequestServiceImp;
+import com.poet.ordering.system.service.PhoneServiceImp;
+import com.poet.ordering.system.service.RestaurantServiceImp;
+import com.poet.ordering.system.service.SendEmailsToSubscribers;
+import com.poet.ordering.system.service.TagServiceImp;
+
+@WebServlet("/CreateOrderServlet")
+@MultipartConfig
+public class CreateOrderRequestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private OrderRequestServiceImp orderRequestService = OrderRequestServiceImp.getInstance();
+	private RestaurantServiceImp restaruantService = RestaurantServiceImp.getInstance();
+	private PhoneServiceImp phoneService = PhoneServiceImp.getInstance();
+	private AddressServiceImp addressService = AddressServiceImp.getInstance();
+	private TagServiceImp tagService = TagServiceImp.getInstance();
+
+	public CreateOrderRequestServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int restaurantID = Integer.parseInt(request.getParameter("restaurantid"));
+		try {
+			Restaurant restaurant = restaruantService.viewRestaurant(restaurantID);
+			Phone phone = phoneService.viewPhone(restaurantID);
+			Address address = addressService.viewAddress(restaurantID);
+			Tag tag = tagService.viewTag(restaurantID);
+			request.setAttribute("restaurantName", restaurant.getName());
+			request.setAttribute("restaurantMenuUrl", restaurant.getMenuUrl());
+			request.setAttribute("restaurantPhone", phone.getPhoneNumber());
+			request.setAttribute("restaurantAddress", address.getAddress());
+			request.setAttribute("restaurantTag", tag.getTag());
+			request.setAttribute("restaurantid", restaurantID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		request.getRequestDispatcher("/jsp/order/createOrderRequest.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if (request.getParameter("closeRequest") == null) {
+			long id = createOrderRequest(request, response);
+			request.getRequestDispatcher("OrderRequest?id=" + id).forward(request, response);
+		} else if (request.getParameter("closeRequest").equals("Close Request")) {
+			int id = changeRequestStatus(request, response, "Closed");
+			request.getRequestDispatcher("OrderRequest?id=" + id).forward(request, response);
+		} else if (request.getParameter("closeRequest").equals("Archive Request")) {
+			int id = changeRequestStatus(request, response, "Archived");
+			request.getRequestDispatcher("OrderRequest?id=" + id).forward(request, response);
+		}
+	}
+
+	private long createOrderRequest(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		OrderRequest orderRequest = new OrderRequest();
+		User user = new User();
+		user = (User) request.getSession().getAttribute("user");
+		orderRequest.setUserId(user.getId());
+		System.out.println("user id" + user.getId());
+		orderRequest.setTimeout(request.getParameter("timeout"));
+		SendEmailsToSubscribers sendEmailsToSubscribers = new SendEmailsToSubscribers();
+		orderRequest.setStatus("Open");
+
+		orderRequest.setRestaurantId(Integer.parseInt(request.getParameter("restaurantid")));
+		long id = 0;
+		try {
+			id = orderRequestService.addNewOrderRequest(orderRequest);
+			sendEmailsToSubscribers.sendEmails(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+	private int changeRequestStatus(HttpServletRequest request, HttpServletResponse response, String status)
+			throws ServletException, IOException {
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setId(Integer.parseInt(request.getParameter("orderRequestId")));
+		orderRequest.setStatus(status);
+		try {
+			orderRequestService.changeStatus(orderRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Integer.parseInt(request.getParameter("orderRequestId"));
+	}
+}

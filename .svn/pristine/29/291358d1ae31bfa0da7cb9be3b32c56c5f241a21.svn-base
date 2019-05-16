@@ -1,0 +1,98 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="header" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style>
+</style>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="${pageContext.request.contextPath}/css/common/allUsersRestaurants.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/restaurant/allRestaurant.css" rel="stylesheet">
+<script
+	src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script
+	src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
+<script src="allUsersRestaurantsSearchFilter.js"></script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>All Restaurants</title>
+<header:header />
+</head>
+<body>
+	
+	<div class="container">
+		<br> <br>
+		<div class="row">
+			<div class="col-lg-4 col-lg-offset-4">
+				<input type="search" id="search" value="" class="form-control"
+					placeholder="Search Restaurants">
+			</div>
+		</div>
+		<br> <br>
+		<div class="row">
+			<div class="col-lg-12">
+				<table class="tableb" id="table">
+					<thead>
+						<tr class="tablehead">
+							<th class="tabled">Restaurant Name</th>
+							<th class="tabled"></th>
+							<th class="tabled"></th>
+							<th class="tabled"></th>
+							<th class="tabled"></th>
+							<th class="tabled"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="restaurant" items="${listResaurant}">
+							<tr class="tablebody">
+								<td class="tabled"><a
+									href="restaurantProfile?id=<c:out value='${restaurant.id}' />">
+										<c:out value="${restaurant.name}" />
+								</a></td>
+
+								<td class="tabled"><c:choose>
+										<c:when test="${not empty restaurant.menuUrl}">
+
+											<a href="<c:out value='${restaurant.menuUrl}' />"
+												target="_blank"> Menu URL </a>
+
+										</c:when>
+										<c:otherwise> &nbsp; 
+									
+									 </c:otherwise>
+
+									</c:choose></td>
+
+								<td class="tabled"><c:choose>
+										<c:when test="${not empty restaurant.menuImage}">
+
+											<a href="<c:out value='${restaurant.menuImage}' />"
+												target="_blank"> Menu Image </a>
+
+										</c:when>
+										<c:otherwise> &nbsp; 
+									
+									 </c:otherwise>
+
+									</c:choose></td>
+
+								<td class="tabled"><a
+									href="/OrderiingSystem/createOrder?id=<c:out value='${restaurant.id}' />">
+										Order </a></td>
+								<td><a href="/Orderingsystem/RestaurantServlet?id=<c:out value='${restaurant.id}' />">Edit</a></td>
+                    			<td><a href="/Orderingsystem/deleteRestaurant?id=<c:out value='${restaurant.id}' />">Delete</a></td>
+							</tr>
+						</c:forEach>
+
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

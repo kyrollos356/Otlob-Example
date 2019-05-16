@@ -1,0 +1,145 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/common/basic.css" />
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/common/profile.css" />
+
+
+<script
+	src="${pageContext.request.contextPath}/js/restaurant/restaurantProfile.js"></script>
+<link
+	href="${pageContext.request.contextPath}/css/restaurant/restaurantProfile.css"
+	rel="stylesheet">
+
+<t:header />
+<title>Restaurant Profile</title>
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="title">
+				<i class="name">${restaurant.name}</i>
+			</div>
+		</div>
+		<br> <br>
+		<div class="row">
+			<div class="col-sm-3 col-sm-offset-1">
+				<img class="profile-img"
+					src="${pageContext.request.contextPath}/img/restaurantplaceholder.gif">
+			</div>
+
+			<div class="col-sm-6 ">
+
+				<div class="skypeemail">
+					<c:choose>
+						<c:when test="${not empty restaurant.menuUrl}">
+							<a href="<c:out value='${restaurant.menuUrl}' />" target="_blank">
+								<p>Menu URL</p>
+							</a>
+
+
+						</c:when>
+
+					</c:choose>
+					<c:choose>
+						<c:when test="${not empty restaurant.menuImage}">
+
+							<a href="<c:out value='${restaurant.menuImage}' />"
+								target="_blank">
+								<p>Menu Image</p>
+							</a>
+
+						</c:when>
+					</c:choose>
+
+
+					<p>Addresses: ${addresses}</p>
+
+
+					<p>Tags: ${tags}</p>
+
+
+					<p>Phone Numbers: ${phoneNumbers}</p>
+
+
+				</div>
+			</div>
+		</div>
+		<br> <br> <br>
+		<div class="title">Reviews:</div>
+
+
+
+
+
+	 <div class="row">
+   	<div class="well" style="padding 20px;border-radius: 4px">
+            <div class="text-right">
+                <a class="reviewbtn" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+            </div>
+        
+            <div id="post-review-box" style=" display:none;">
+                
+                    <form accept-charset="UTF-8" action="" method="post">
+                        <input id="ratings-hidden" name="rating" type="hidden"> 
+                      
+                            <div class="stars skypeemail starrr " data-rating="0"><i style="color:#333;font-style:normal;">Rating:&emsp;</i></div>
+                        <textarea class="form-control animated" cols="50" id="new-review" style="margin-bottom: 25px;" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+        
+                        
+                        <div class="text-right">    
+                            <a class="btn cancelbtn" href="#" id="close-review-box" style="display:none;">
+                            <span class="glyphicon glyphicon-remove"></span></a>
+                            <button class="reviewbtn" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> 
+     
+
+
+
+
+
+		<div class="row">
+			<div class="well" style="display: inline-block;">
+				<div class="media">
+					<a class="pull-left" href="#"> <img class="media-object"
+						src="http://placekitten.com/150/150">
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading">userName</h4>
+						<p>content</p>
+						<ul class="list-inline list-unstyled">
+							<li><span><i class="glyphicon glyphicon-calendar"></i>
+									2 days, 8 hours </span></li>
+							<li>|</li>
+							<li><span class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star"></span> <span
+								class="glyphicon glyphicon-star-empty"></span></li>
+
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+</body>
+</html>

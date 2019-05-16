@@ -1,0 +1,143 @@
+@charset "ISO-8859-1";
+
+.title {
+	color: #333333;
+	font-size: 33px;
+	font-family: 'Quicksand';
+	font-weight: bold;
+	margin-left:15px;
+	margin-bottom:22px;
+	margin-top: 12px;
+}
+.subtitle {
+	color: #333333;
+	font-size: 28px;
+	font-family: 'Quicksand';
+	font-weight: bold;
+	margin-bottom:22px;
+	margin-top: 15px;
+}
+
+.name{
+	color: #93b32d;
+	font-size: 33px;
+	font-family: 'Quicksand';
+	font-weight: bold;
+	
+}
+.username {
+	margin-left: 20px;
+	color: #333333;
+	font-size: 23px;
+	font-family: 'Quicksand';
+	font-weight: bold;
+}
+
+.skypeemail {
+	margin-left: 20px;
+	color: #333333;
+	font-size: 20px;
+	font-family: 'Quicksand';
+	font-weight: bold;
+}
+
+.scrollbox {
+	overflow-y: scroll;
+	height: 180px;
+	color: #93b32d;
+}
+
+.list-group-item{
+	background-color: #f7f6f6;
+	
+}
+.panelcustom {
+	margin-bottom: 20px;
+	background-color: #333333;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	color: #93b32d;
+	font-family: 'Quicksand';
+	font-weight: bold;
+}
+
+.panel-heading {
+	color: #93b32d;
+	font-family: 'Quicksand';
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.profile-img {
+    width: 100%;
+    height: auto;
+}
+
+.greenbtn{
+	background-color: #93b32d; 
+	font-size: 18px;
+    float: right;
+    font-family:'Quicksand';
+	font-weight: bold; 
+	width: 136px;
+	height:40px;
+	display: inline-block;
+    padding: 6px 12px;
+    margin-top:15px;
+    margin-bottom: 15px;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.bigsubbtn{
+	background-color: #93b32d; 
+	font-size: 27px;
+    float: right;
+    font-family:'Quicksand';
+	font-weight: bold; 
+	width: 100%;
+	display: inline-block;
+    padding: 6px 12px;
+    margin-top:15px;
+    margin-bottom: 15px;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.reviewbtn{
+	background-color: #93b32d; 
+	font-size: 16px;
+	color: #333;
+    font-family:'Quicksand';
+	font-weight: bold; 
+	width: auto;
+	display: inline-block;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+

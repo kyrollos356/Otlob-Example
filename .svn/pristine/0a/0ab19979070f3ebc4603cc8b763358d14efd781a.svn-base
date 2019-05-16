@@ -1,0 +1,20 @@
+
+
+a{
+	color: #93b32d;
+	font-size: 18px;
+	font-family:'Quicksand';
+	font-weight: bold;
+}
+body {
+	background-color: #f7f6f6;
+}
+.container{
+	margin-top:25px;
+	margin-bottom:25px;
+}
+.row{
+	margin-top:15px;
+	margin-bottom:15px;
+	
+}

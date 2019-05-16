@@ -1,0 +1,48 @@
+package com.poet.ordering.system.filter;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.poet.ordering.system.model.User;
+
+@WebFilter("/*")
+public class BasicAuthenticationFilter implements Filter {
+
+	public void destroy() {
+
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain fchain)
+			throws IOException, ServletException {
+
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		String path = httpServletRequest.getServletPath();
+		User user = (User) httpServletRequest.getSession().getAttribute("user");
+		if (path.equals("/Signup") || path.contains(".css") || path.contains(".js") || path.startsWith("/img/")) {
+			request.getRequestDispatcher(path).forward(request, response);
+		} else if (user == null && !path.equals("/login")) {
+
+			request.getRequestDispatcher("/login").forward(request, response);
+
+		} else {
+
+			request.getRequestDispatcher(httpServletRequest.getServletPath()).forward(request, response);
+		}
+
+	}
+
+	public void init(FilterConfig fconfig) throws ServletException {
+
+	}
+
+}
